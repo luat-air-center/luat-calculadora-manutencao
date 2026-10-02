@@ -1161,44 +1161,6 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
     </div>
   </div>
 
-  <!-- VISITAS -->
-  <div class="prop-section">
-    <div class="prop-sec-head">
-      <h3>Cronograma de Visitas</h3>
-    </div>
-    <div class="prop-sec-body">
-      <div class="visits-grid">
-        <div class="visit-box">
-          <div class="vb-num" id="p-vCheck">—</div>
-          <div class="vb-label">Visitas de Checklist</div>
-          <div class="vb-sub" id="p-vCheckSub">no contrato</div>
-        </div>
-        <div class="visit-box">
-          <div class="vb-num" id="p-vManut">—</div>
-          <div class="vb-label">Manutenções Preventivas</div>
-          <div class="vb-sub" id="p-vManutSub">no contrato</div>
-        </div>
-        <div class="visit-box" style="background:#eef4fd;border-color:#c5d9f0">
-          <div class="vb-num" id="p-vCheckAno" style="color:var(--blue)">—</div>
-          <div class="vb-label">Média Checklist / Ano</div>
-          <div class="vb-sub">visitas por ano</div>
-        </div>
-        <div class="visit-box" style="background:var(--green-light);border-color:#b7e3cc">
-          <div class="vb-num" id="p-vManutAno" style="color:var(--green)">—</div>
-          <div class="vb-label">Média Manutenções / Ano</div>
-          <div class="vb-sub">visitas por ano</div>
-        </div>
-      </div>
-      <div style="margin-top:20px;padding:16px 20px;background:var(--light);border-radius:10px;border:1px solid var(--border)">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;font-size:13px">
-          <div><span style="color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Duração – Checklist</span><strong id="p-durCheck">—</strong></div>
-          <div><span style="color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Duração – Manutenção Prev.</span><strong id="p-durManut">—</strong></div>
-          <div><span style="color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Distância Ida + Volta</span><strong id="p-dist">—</strong></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- SEÇÃO TÉCNICA NA PROPOSTA -->
   <div class="prop-tech">
     <div class="prop-tech-head">
@@ -1859,7 +1821,11 @@ async function generateProposal(){
   // highlights
   const totalVisitas = d.numCheck + d.numManut;
   document.getElementById('p-totalVisitas').textContent = totalVisitas;
-  document.getElementById('p-visitasSub').textContent = `${d.numCheck} checklist + ${d.numManut} manutenções`;
+  const fh = x => String(x).replace('.',',');
+  const partesVis = [];
+  if(d.numCheck>0) partesVis.push(`${d.numCheck} checklist de ${fh(d.durCheck)} h`);
+  if(d.numManut>0) partesVis.push(`${d.numManut} ${d.numManut===1?'manutenção preventiva':'manutenções preventivas'} de ${fh(d.durManut)} h`);
+  document.getElementById('p-visitasSub').textContent = partesVis.join(' + ') || 'no período do contrato';
   document.getElementById('p-totalPecas').textContent = fmt(d.totalPecasGeral);
   const totalHrTec = (d.durCheck*d.numCheck) + (d.durManut*d.numManut);
   document.getElementById('p-totalHoras').textContent = fmtN(totalHrTec,0) + ' h';
@@ -1988,15 +1954,6 @@ async function generateProposal(){
   document.getElementById('p-escopo-sec').style.display = selecionados.length > 0 ? 'block' : 'none';
 
   // visits
-  document.getElementById('p-vCheck').textContent    = fmtN(d.numCheck,0);
-  document.getElementById('p-vCheckSub').textContent = `a cada ~${fmtN(d.hTotal/(d.numCheck||1),0)} h`;
-  document.getElementById('p-vManut').textContent    = fmtN(d.numManut,0);
-  document.getElementById('p-vManutSub').textContent = `a cada ${fmtN(v('intManut'),0)} h`;
-  document.getElementById('p-vCheckAno').textContent = fmtN(d.checkAno,2);
-  document.getElementById('p-vManutAno').textContent = fmtN(d.manutAno,2);
-  document.getElementById('p-durCheck').textContent  = `${d.durCheck}h por visita`;
-  document.getElementById('p-durManut').textContent  = `${d.durManut}h por visita`;
-  document.getElementById('p-dist').textContent      = `${d.km} km`;
 
   // ── propNum + validade ──
   // Número real vem do Supabase (sequencial, compartilhado entre todos os vendedores).
