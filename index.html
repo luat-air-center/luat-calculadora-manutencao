@@ -646,17 +646,15 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
       <div class="grid-4">
         <div class="field-calc"><label>Intervalo – Checklist</label><div class="calc-val" id="calc-intCheck">—</div><span class="unit">= horas trabalhadas/mês (1 visita/mês)</span></div>
         <div class="field"><label>Total de Visitas Checklist <span class="req">✎</span></label><input type="number" id="numCheck" value="12" min="0" oninput="this.dataset.manual='1';updateCalcs()"/><span class="unit">calculado automaticamente · ajustável</span></div>
-        <div class="field-calc"><label>Média Checklist / Ano</label><div class="calc-val" id="calc-checkAno">—</div><span class="unit">visitas por ano</span></div>
-        <div></div>
+        <div></div><div></div>
       </div>
       <div class="divider"></div>
       <div class="grid-4">
         <div class="field"><label>Intervalo Manutenção Preventiva</label><input type="number" id="intManut" value="2000" min="1" oninput="updateCalcs()"/><span class="unit">horas · igual ao intervalo de troca de óleo</span></div>
         <div class="field-calc"><label>Total Manutenções no Contrato</label><div class="calc-val" id="calc-numManut">—</div><span class="unit">calculado automaticamente</span></div>
-        <div class="field-calc"><label>Média Manutenções / Ano</label><div class="calc-val" id="calc-manutAno">—</div><span class="unit">visitas por ano</span></div>
-        <div></div>
+        <div></div><div></div>
       </div>
-      <div class="info-note">💡 O <strong>intervalo de checklist</strong> é igual às horas trabalhadas por mês (1 visita/mês automático). O número total pode ser ajustado manualmente. O <strong>intervalo de manutenção preventiva</strong> deve ser igual ao intervalo de troca de óleo definido no manual Schulz.</div>
+      <div class="info-note">💡 O <strong>intervalo de checklist</strong> é igual às horas trabalhadas por mês (1 visita/mês automático). O número total pode ser ajustado manualmente. O <strong>intervalo de manutenção preventiva</strong> deve ser igual ao intervalo de troca de óleo definido no manual Schulz. A manutenção preventiva ocorre <strong>por horas trabalhadas ou ao menos 1× por ano — o que vencer primeiro</strong>.</div>
 
       <!-- VISITA EMERGENCIAL -->
       <div class="emergencial-box">
@@ -1253,6 +1251,29 @@ const DEFAULT_PARTS = [
 ];
 const EXTRA_ROWS = 4;
 
+// Critério de troca: 'both' = horas trabalhadas OU 1×/ano (o que vencer primeiro);
+// 'hours' = só horas; 'annual' = só anual (1×/ano)
+function classificarPeca(nome){
+  const n = (nome||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  if(!n) return 'hours';
+  if(/coalescente/.test(n)) return 'annual';
+  if(/^oleo\b|oleo lubrificante|filtro (de )?oleo|filtro (de )?ar\b|elemento (do )?filtro (de )?ar|separador|nylon|visor de fluxo/.test(n)) return 'both';
+  if(/reparo.*(termostat|admiss|minim)|(termostat).*reparo/.test(n)) return 'both';
+  return 'hours';
+}
+function autoCriterio(id){
+  const sel = document.getElementById(id+'_crit');
+  const nm  = document.getElementById(id+'_name');
+  if(sel && nm && !sel.dataset.manual) sel.value = classificarPeca(nm.value);
+}
+function calcTrocas(horas, intervalo, meses, crit){
+  const porAno = Math.floor(meses/12);
+  const porHoras = intervalo>0 ? Math.floor(horas/intervalo) : 0;
+  if(crit==='annual') return porAno;
+  if(crit==='both')   return Math.max(porHoras, porAno);
+  return porHoras;
+}
+
 let chartInstance = null;
 
 // ──────────────────────────────────────────────
@@ -1298,19 +1319,20 @@ function buildPanels(){
       <table class="parts-table">
         <thead>
           <tr>
-            <th style="width:32%">Peça / Insumo</th>
-            <th style="width:18%;text-align:center">Intervalo (h)</th>
-            <th style="width:18%;text-align:center">Preço Unit. (R$)</th>
-            <th style="width:12%;text-align:center">Qtd.</th>
-            <th style="width:10%;text-align:center">Nº Trocas</th>
-            <th style="width:10%;text-align:right">Total (R$)</th>
+            <th style="width:27%">Peça / Insumo</th>
+            <th style="width:12%;text-align:center">Intervalo (h)</th>
+            <th style="width:17%;text-align:center">Critério de troca</th>
+            <th style="width:13%;text-align:center">Preço Unit. (R$)</th>
+            <th style="width:8%;text-align:center">Qtd.</th>
+            <th style="width:11%;text-align:center">Nº Trocas</th>
+            <th style="width:12%;text-align:right">Total (R$)</th>
           </tr>
         </thead>
         <tbody id="comp${c}_tbody">
         </tbody>
         <tfoot>
           <tr class="parts-subtotal">
-            <td colspan="5" style="text-align:right;padding-right:16px">TOTAL PEÇAS – COMPRESSOR ${c+1}</td>
+            <td colspan="6" style="text-align:right;padding-right:16px">TOTAL PEÇAS – COMPRESSOR ${c+1}</td>
             <td class="td-calc" id="comp${c}_total">R$ 0,00</td>
           </tr>
         </tfoot>
@@ -1332,9 +1354,14 @@ function buildPanels(){
 function buildPartRow(comp, idx, name, interval, price, qty, empty=false){
   const tr = document.createElement('tr');
   const id = `c${comp}_p${idx}`;
+  const crit = classificarPeca(name);
   tr.innerHTML = `
-    <td><input type="text" id="${id}_name" value="${name}" placeholder="Peça adicional..." oninput="updateCalcs()"/></td>
+    <td><input type="text" id="${id}_name" value="${name}" placeholder="Peça adicional..." oninput="autoCriterio('${id}');updateCalcs()"/></td>
     <td style="text-align:center"><input type="number" id="${id}_int" value="${interval}" min="0" oninput="updateCalcs()" style="text-align:center"/></td>
+    <td style="text-align:center"><select id="${id}_crit" onchange="this.dataset.manual='1';updateCalcs()" style="width:100%;padding:6px 4px;font-size:12px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--navy)">
+      <option value="both"${crit==='both'?' selected':''}>Horas ou anual</option>
+      <option value="hours"${crit==='hours'?' selected':''}>Só horas</option>
+      <option value="annual"${crit==='annual'?' selected':''}>Só anual</option></select></td>
     <td style="text-align:center"><input type="number" id="${id}_price" value="${price}" min="0" step="0.01" oninput="updateCalcs()" style="text-align:center"/></td>
     <td style="text-align:center"><input type="number" id="${id}_qty" value="${qty}" min="0" oninput="updateCalcs()" style="text-align:center;width:60px"/></td>
     <td class="td-calc" id="${id}_trocas" style="text-align:center">—</td>
@@ -1508,13 +1535,11 @@ function updateCalcs(){
 
   const numCheck = v('numCheck');
   const intManut = v('intManut')||1;
-  const numManut = Math.floor(hTotal_ref / intManut);
+  const numManut = Math.max(Math.floor(hTotal_ref / intManut), Math.floor(meses / 12)); // o que vencer primeiro: horas ou 1×/ano
   const checkAno = anos > 0 ? numCheck / anos : 0;
   const manutAno = anos > 0 ? numManut / anos : 0;
 
   set('calc-numManut', fmtN(numManut, 0));
-  set('calc-checkAno', fmtN(checkAno, 2));
-  set('calc-manutAno', fmtN(manutAno, 2));
 
   // ── Deslocamento + horas técnicas ──
   const km       = v('distKm');
@@ -1554,7 +1579,8 @@ function updateCalcs(){
       const int = parseFloat(document.getElementById(`${id}_int`)?.value)||0;
       const pr  = parseFloat(document.getElementById(`${id}_price`)?.value)||0;
       const qty = parseFloat(document.getElementById(`${id}_qty`)?.value)||0;
-      const trocas = (int>0 && nm) ? Math.floor(hTot_c/int) : 0;
+      const crit = document.getElementById(`${id}_crit`)?.value || 'hours';
+      const trocas = nm ? calcTrocas(hTot_c, int, meses, crit) : 0;
       const tot = trocas * pr * qty;
       compTotal += tot;
       const el_t = document.getElementById(`${id}_trocas`);
@@ -2275,6 +2301,8 @@ function clearForm(){
   // reset numCheck manual flag
   const nc = document.getElementById('numCheck');
   if(nc) delete nc.dataset.manual;
+  // reset critério de troca das peças
+  document.querySelectorAll('select[id$="_crit"]').forEach(sel=>{ delete sel.dataset.manual; const id=sel.id.replace('_crit',''); sel.value = classificarPeca(document.getElementById(id+'_name')?.value); });
   // reset desconto/abatimento
   const descCb = document.getElementById('descontoAtivo');
   if(descCb) descCb.checked = false;
