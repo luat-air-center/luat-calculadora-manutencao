@@ -380,6 +380,20 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
 .nxt-card.ok .nxt-val{color:var(--green)}
 .nxt-sub{font-size:11px;color:var(--muted);margin-top:2px}
 
+
+/* ── SELO PEÇAS ORIGINAIS / GIA / VALIDADE ── */
+.selo-schulz{display:flex;gap:14px;align-items:center;margin-top:16px;padding:14px 18px;border:2px solid var(--blue);border-radius:10px;background:#eef4fc;color:var(--navy);font-size:13px;line-height:1.5}
+.selo-schulz .selo-ico{font-size:28px}
+.gia-intro{font-size:14px;line-height:1.6;color:var(--navy);margin-bottom:14px}
+.gia-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gia-item{display:flex;gap:10px;align-items:center;padding:12px 14px;background:#f6f8fb;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--navy)}
+.gia-item span{font-size:20px}
+@media(max-width:700px){.gia-grid{grid-template-columns:1fr}}
+.prop-validade-box{margin:16px 0;padding:16px 20px;border:2px dashed var(--accent);border-radius:10px;text-align:center;color:var(--navy)}
+.prop-validade-box .pvb-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.prop-validade-box .pvb-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--accent);margin:4px 0}
+.prop-validade-box .pvb-sub{font-size:12px;color:var(--muted)}
+.selo-schulz,.gia-item,.prop-validade-box{page-break-inside:avoid;break-inside:avoid}
 /* ── CONSOLIDADO DE PECAS ── */
 .pecas-consolidado{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
 .pecas-consolidado th{font-size:11px;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;padding:8px 10px;border-bottom:2px solid var(--navy);background:#f0f2f5;text-align:left}
@@ -1093,21 +1107,6 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
     </div>
   </div>
 
-  <!-- COMPOSIÇÃO DOS CUSTOS -->
-  <div class="prop-section">
-    <div class="prop-sec-head">
-      <h3>Composição dos Custos</h3>
-      <span class="psh-badge" id="p-totalContrato2">R$ 0</span>
-    </div>
-    <div class="prop-sec-body">
-      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:center">
-        <table class="cost-table" id="p-costTable"></table>
-        <div class="chart-wrap"><canvas id="costChart"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-
   <!-- ESCOPO DE SERVIÇOS -->
   <div class="prop-section" id="p-escopo-sec">
     <div class="prop-sec-head">
@@ -1137,17 +1136,6 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
     </div>
   </div>
 
-  <!-- PRÓXIMA MANUTENÇÃO -->
-  <div class="prop-section" id="p-next-manut-sec">
-    <div class="prop-sec-head">
-      <h3>Alerta — Próxima Manutenção por Compressor</h3>
-      <span class="psh-badge">Baseado no horímetro atual</span>
-    </div>
-    <div class="prop-sec-body">
-      <div class="next-manut-row" id="p-next-manut-row"></div>
-    </div>
-  </div>
-
   <!-- CONSOLIDADO DE PEÇAS -->
   <div class="prop-section">
     <div class="prop-sec-head">
@@ -1156,6 +1144,10 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
     </div>
     <div class="prop-sec-body">
       <table class="pecas-consolidado" id="p-pecas-table"></table>
+      <div class="selo-schulz">
+        <div class="selo-ico">🛡️</div>
+        <div><strong>Somente peças originais Schulz, com garantia de fábrica mantida.</strong> Todas as trocas do contrato utilizam peças originais, adquiridas direto da fábrica pela LUAT, distribuidor autorizado e exclusivo Schulz. Assim o equipamento mantém a garantia do fabricante e o desempenho nominal.</div>
+      </div>
     </div>
   </div>
 
@@ -1203,6 +1195,23 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
     </div>
   </div>
 
+  <!-- LUAT GIA + RELATÓRIO DIGITAL -->
+  <div class="prop-section" id="p-gia-sec">
+    <div class="prop-sec-head">
+      <h3>LUAT GIA — Gestão Inteligente de Ativos</h3>
+      <span class="psh-badge">Relatório digital a cada visita</span>
+    </div>
+    <div class="prop-sec-body">
+      <p class="gia-intro">O <strong>LUAT GIA</strong> é a nossa forma de cuidar do seu compressor como um ativo da empresa, e não apenas como uma máquina que recebe visitas. Cada equipamento tem histórico próprio, as trocas seguem as horas trabalhadas ou o calendário anual (o que vencer primeiro) e você sabe sempre o que foi feito e o que vem a seguir.</p>
+      <div class="gia-grid">
+        <div class="gia-item"><span>📄</span><div><strong>Relatório digital após cada visita</strong>, enviado ao responsável</div></div>
+        <div class="gia-item"><span>🔧</span><div>Serviços executados e peças trocadas</div></div>
+        <div class="gia-item"><span>⏱️</span><div>Horímetro e condição em que o equipamento foi encontrado</div></div>
+        <div class="gia-item"><span>📅</span><div>Recomendações e previsão das próximas intervenções</div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- COMPARATIVO PERSONALIZADO -->
   <div class="prop-section" id="p-comparativo-sec">
     <div class="prop-sec-head">
@@ -1222,6 +1231,12 @@ body{font-family:'Inter',sans-serif;background:var(--light);color:var(--navy);mi
     <div class="prop-sec-body">
       <div class="obs-block" id="p-obs-text"></div>
     </div>
+  </div>
+
+  <div class="prop-validade-box">
+    <div class="pvb-label">Validade da proposta</div>
+    <div class="pvb-val" id="p-validade-box">—</div>
+    <div class="pvb-sub">Valores e condições garantidos até esta data.</div>
   </div>
 
   <!-- RODAPÉ -->
@@ -1860,7 +1875,6 @@ async function generateProposal(){
   document.getElementById('p-mensal').innerHTML = `<span>R$</span> ${fmtN(d.mensalVal,2).replace('R$','').trim()}`;
   document.getElementById('p-mensalNote').textContent = `por mês, durante ${d.meses} ${d.meses===1?'mês':'meses'}`;
   document.getElementById('p-totalContrato').textContent = fmt(d.totalContrato);
-  document.getElementById('p-totalContrato2').textContent = fmt(d.totalContrato);
   // desconto / abatimento — exibido ao cliente quando concedido
   const temDesconto = d.descontoAtivo && d.descontoAplicado > 0;
   const elMensalBruto   = document.getElementById('p-mensalBruto');
@@ -1884,46 +1898,6 @@ async function generateProposal(){
   // custo por hora
   document.getElementById('p-custHora').textContent = fmtN(d.custHora, 2).replace('R$','').trim();
   document.getElementById('p-custHoraSub').textContent = `R$ ${fmtN(d.custHora,2)} por hora · sobre ${fmtN(d.hTotal,0)} horas trabalhadas no contrato`;
-  // cost table
-  const rows = [
-    {label:'Deslocamento – Checklist',        val:d.custDeslCheck,  tag:'tag-blue'},
-    {label:'Deslocamento – Manutenções Prev.',val:d.custDeslManut,  tag:'tag-blue'},
-    {label:'Horas Técnicas – Checklist',      val:d.custHrCheck,    tag:'tag-blue'},
-    {label:'Horas Técnicas – Manutenção Prev.',val:d.custHrManut,   tag:'tag-blue'},
-    ...(d.custEmergTotal>0 ? [{label:'Visitas Emergenciais ('+d.numEmerg+'×)', val:d.custEmergTotal, tag:'tag-orange'}] : []),
-    {label:'Peças de Reposição (todos)',       val:d.totalPecasGeral, tag:'tag-green'},
-    ...(temDesconto ? [{label:`Desconto / Abatimento Comercial (${fmtN(d.descontoPctEfetivo,1)}%)`, val:-d.descontoAplicado, tag:'tag-discount'}] : []),
-  ];
-  let tableHTML = `<thead><tr><th>Item</th><th style="text-align:right">Total Contrato</th><th style="text-align:right">Mensal</th><th style="text-align:right">%</th></tr></thead><tbody>`;
-  rows.forEach(r=>{
-    const pct = d.totalContratoBruto>0 ? (r.val/d.totalContratoBruto*100) : 0;
-    tableHTML += `<tr><td>${r.label}</td><td class="td-r">${fmt(r.val)}</td><td class="td-r">${fmt(r.val/d.meses)}</td><td class="td-pct">${fmtN(pct,1)}%</td></tr>`;
-  });
-  tableHTML += `</tbody><tfoot><tr class="ct-total"><td><strong>TOTAL</strong></td><td class="td-r">${fmt(d.totalContrato)}</td><td class="td-r">${fmt(d.mensalVal)}</td><td class="td-pct">100%</td></tr></tfoot>`;
-  document.getElementById('p-costTable').innerHTML = tableHTML;
-
-  // chart — composição do custo operacional bruto (o desconto é tratado como ajuste comercial, exibido à parte)
-  if(chartInstance) chartInstance.destroy();
-  chartInstance = new Chart(document.getElementById('costChart'), {
-    type:'doughnut',
-    data:{
-      labels:['Desl. Checklist','Desl. Manutenção','H.Tec. Checklist','H.Tec. Manutenção','Emergencial','Peças'],
-      datasets:[{
-        data:[d.custDeslCheck, d.custDeslManut, d.custHrCheck, d.custHrManut, d.custEmergTotal||0, d.totalPecasGeral],
-        backgroundColor:['#1a56a0','#2370c8','#4d90e0','#7ab3ed','#d4420f','#1a7c4f'],
-        borderWidth:2, borderColor:'#ffffff'
-      }]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{position:'right', labels:{font:{family:'Inter',size:11}, boxWidth:12, padding:12}},
-        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.parsed)}`}}
-      },
-      cutout:'62%'
-    }
-  });
-
   // compressor cards — only enabled ones
   const enabledComps = Array.from({length:COMP_COUNT},(_,i)=>document.getElementById(`ce-${i}`)?.checked ?? (i===0));
   const activeCompCount = enabledComps.filter(Boolean).length;
@@ -1934,7 +1908,7 @@ async function generateProposal(){
   d.compData.forEach((comp,i)=>{
     if(!enabledComps[i]) return;
     const monthlyCost = comp.total / d.meses;
-    const trocasInfo = comp.parts.map(p=>`<div class="ccr-row"><span class="ccr-label">${p.name}</span><span class="ccr-val">${p.trocas}×</span></div>`).join('');
+    const trocasInfo = comp.parts.filter(p=>p.trocas>0).map(p=>`<div class="ccr-row"><span class="ccr-label">${p.name}</span><span class="ccr-val">${p.trocas}×</span></div>`).join('');
     cardsHTML += `
       <div class="comp-card">
         <div class="comp-card-header">
@@ -1947,10 +1921,6 @@ async function generateProposal(){
           </div>
         </div>
         <div class="comp-card-rows">${trocasInfo||'<div class="ccr-row"><span class="ccr-label" style="color:#c0392b">Sem peças cadastradas</span></div>'}</div>
-        <div class="comp-card-total">
-          <span class="cct-label">Total peças</span>
-          <span class="cct-val">${fmt(comp.total)}</span>
-        </div>
       </div>`;
   });
   document.getElementById('p-compCards').innerHTML = cardsHTML;
@@ -2010,36 +1980,17 @@ async function generateProposal(){
     const vd = new Date(propVal+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
     document.getElementById('p-propValidade').textContent = `Válida até ${vd}`;
     document.getElementById('p-footer-validade').textContent = `Proposta válida até ${vd}.`;
+    document.getElementById('p-validade-box').textContent = vd;
   } else {
     document.getElementById('p-propValidade').textContent = 'Válida por 30 dias';
     document.getElementById('p-footer-validade').textContent = 'Esta proposta é válida por 30 dias a partir da data de emissão.';
+    document.getElementById('p-validade-box').textContent = '30 dias a partir da emissão';
   }
 
   // ── QR Code ──
   setTimeout(()=>drawQR('p-qr-canvas', s('sellerName')), 100);
 
-  // ── Alerta próxima manutenção ──
   const enabledComps2 = Array.from({length:COMP_COUNT},(_,i)=>document.getElementById(`ce-${i}`)?.checked ?? (i===0));
-  const intManutVal = v('intManut')||2000;
-  const nextRow = document.getElementById('p-next-manut-row');
-  nextRow.innerHTML = '';
-  let hasHorimetro = false;
-  d.compData.forEach((comp,i)=>{
-    if(!enabledComps2[i]) return;
-    const hor = parseFloat(document.getElementById(`comp${i}_horimetro`)?.value)||0;
-    if(hor<=0) return;
-    hasHorimetro = true;
-    const restante = intManutVal - (hor % intManutVal);
-    const ok = restante > intManutVal * 0.15;
-    const card = document.createElement('div');
-    card.className = `nxt-card${ok?' ok':''}`;
-    card.innerHTML = `<div class="nxt-title">${comp.name}</div>
-      <div class="nxt-val">${fmtN(restante,0)} h</div>
-      <div class="nxt-sub">até a próxima preventiva · horímetro atual: ${fmtN(hor,0)} h</div>`;
-    nextRow.appendChild(card);
-  });
-  document.getElementById('p-next-manut-sec').style.display = hasHorimetro ? 'block' : 'none';
-
   // ── Consolidado de peças ──
   const allParts = {};
   d.compData.forEach((comp,i)=>{
@@ -2052,13 +2003,13 @@ async function generateProposal(){
     });
   });
   const pecasArr = Object.values(allParts).sort((a,b)=>b.total-a.total);
-  let ptHTML = `<thead><tr><th>Peça / Insumo</th><th style="text-align:right">Total Trocas</th><th style="text-align:right">Custo Total</th><th style="text-align:right">Custo Mensal</th></tr></thead><tbody>`;
-  pecasArr.forEach(p=>{
-    ptHTML += `<tr><td>${p.name}</td><td class="pc-val">${p.trocas}×</td><td class="pc-total">${fmt(p.total)}</td><td class="pc-val">${fmt(p.total/d.meses)}</td></tr>`;
+  let ptHTML = `<thead><tr><th>Peça / Insumo</th><th style="text-align:right">Trocas previstas no contrato</th></tr></thead><tbody>`;
+  pecasArr.filter(p=>p.trocas>0).forEach(p=>{
+    ptHTML += `<tr><td>${p.name}</td><td class="pc-val">${p.trocas}×</td></tr>`;
   });
-  ptHTML += `</tbody><tfoot><tr><td><strong>TOTAL GERAL DE PEÇAS</strong></td><td></td><td class="pc-total">${fmt(d.totalPecasGeral)}</td><td class="pc-val">${fmt(d.totalPecasGeral/d.meses)}</td></tr></tfoot>`;
+  ptHTML += `</tbody>`;
   document.getElementById('p-pecas-table').innerHTML = ptHTML;
-  document.getElementById('p-pecas-total-badge').textContent = fmt(d.totalPecasGeral);
+  document.getElementById('p-pecas-total-badge').textContent = 'Peças originais Schulz';
 
   // ── Comparativo preventiva vs corretiva ──
   const custParada = parseFloat(document.getElementById('custParadaHora')?.value)||0;
